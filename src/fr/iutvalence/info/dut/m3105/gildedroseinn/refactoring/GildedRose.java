@@ -32,16 +32,16 @@ public class GildedRose
 
 	public static void itemGestion()
 	{
-		for (int i = 0; i < listItems.size(); i++)
+		for (int item = 0; item < listItems.size(); item++)
 		{
-			qualitytest(i);
+			qualitytest(item);
 
-			if (!SULFURAS_HAND_OF_RAGNAROS.equals(listItems.get(i).getName()))
+			if (!SULFURAS_HAND_OF_RAGNAROS.equals(listItems.get(item).getName()))
 			{
-				listItems.get(i).setSellIn(listItems.get(i).getSellIn() - 1);
+				listItems.get(item).setSellIn(listItems.get(item).getSellIn() - 1);
 			}
 
-			sellIntest(i);
+			sellIntest(item);
 		}
 	}
 
@@ -55,7 +55,7 @@ public class GildedRose
 				{
 					if (listItems.get(item).getQuality() > 0)
 					{
-						changeQuality(item);
+						downQuality(item);
 					}
 				}
 				else
@@ -65,15 +65,20 @@ public class GildedRose
 			}
 			else
 			{
-				if (listItems.get(item).getQuality() < 50)
-				{
-					listItems.get(item).setQuality(listItems.get(item).getQuality() + 1);
-				}
+				upQuality(item);
 			}
 		}
 	}
 
-	private static void changeQuality(int item)
+	private static void upQuality(int item)
+	{
+		if (listItems.get(item).getQuality() < 50)
+		{
+			listItems.get(item).setQuality(listItems.get(item).getQuality() + 1);
+		}
+	}
+
+	private static void downQuality(int item)
 	{
 		if (!SULFURAS_HAND_OF_RAGNAROS.equals(listItems.get(item).getName()))
 		{
@@ -81,40 +86,34 @@ public class GildedRose
 		}
 	}
 
-	private static void qualitytest(int i)
+	private static void qualitytest(int item)
 	{
-		if ((!AGED_BRIE.equals(listItems.get(i).getName()))
-				&& !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(i).getName()))
+		if ((!AGED_BRIE.equals(listItems.get(item).getName()))
+				&& !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(item).getName()))
 		{
-			if (listItems.get(i).getQuality() > 0)
+			if (listItems.get(item).getQuality() > 0)
 			{
-				changeQuality(i);
+				downQuality(item);
 			}
 		}
 		else
 		{
-			if (listItems.get(i).getQuality() < 50)
+			if (listItems.get(item).getQuality() < 50)
 			{
-				listItems.get(i).setQuality(listItems.get(i).getQuality() + 1);
+				listItems.get(item).setQuality(listItems.get(item).getQuality() + 1);
 
-				if (BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(i).getName()))
-				{
-					if (listItems.get(i).getSellIn() < 11)
-					{
-						if (listItems.get(i).getQuality() < 50)
-						{
-							listItems.get(i).setQuality(listItems.get(i).getQuality() + 1);
-						}
-					}
+				upQualityBackstage(item);
+			}
+		}
+	}
 
-					if (listItems.get(i).getSellIn() < 6)
-					{
-						if (listItems.get(i).getQuality() < 50)
-						{
-							listItems.get(i).setQuality(listItems.get(i).getQuality() + 1);
-						}
-					}
-				}
+	private static void upQualityBackstage(int item)
+	{
+		if (BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(item).getName()))
+		{
+			if (listItems.get(item).getSellIn() < 11)
+			{
+				upQuality(item);
 			}
 		}
 	}
