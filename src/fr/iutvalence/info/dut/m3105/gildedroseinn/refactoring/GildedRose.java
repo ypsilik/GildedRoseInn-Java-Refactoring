@@ -11,9 +11,7 @@ public class GildedRose
 	private static final String AGED_BRIE = "Aged Brie";
 	private static List<Item> listItems = null;
 
-	/**
-	 * @param args
-	 */
+	/** @param args */
 	public static void main(String[] args)
 	{
 
@@ -24,49 +22,74 @@ public class GildedRose
 		listItems.add(new Item("Aged Brie", 2, 0));
 		listItems.add(new Item("Elixir of the Mongoose", 5, 7));
 		listItems.add(new Item("Sulfuras, Hand of Ragnaros", 0, 80));
-		listItems.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15, 20));
+		listItems.add(new Item("Backstage passes to a TAFKAL80ETC concert", 15,
+				20));
 		listItems.add(new Item("Conjured Mana Cake", 3, 6));
 
-		itemGestion();
+		updateQualitySellinForAll();
 	}
 
-	public static void itemGestion()
+	public static void updateQualitySellinForAll()
 	{
 		for (int item = 0; item < listItems.size(); item++)
 		{
-			qualitytest(item);
-
-			if (!SULFURAS_HAND_OF_RAGNAROS.equals(listItems.get(item).getName()))
+			updateQuality(item);
+			updateSellin(item);
+			if (listItems.get(item).getSellIn() < 0)
 			{
-				listItems.get(item).setSellIn(listItems.get(item).getSellIn() - 1);
+				updateQualityForOutdatedItem(item);
 			}
-
-			sellIntest(item);
 		}
 	}
 
-	private static void sellIntest(int item)
+	private static void updateQuality(int item)
 	{
-		if (listItems.get(item).getSellIn() < 0)
+		if ((!AGED_BRIE.equals(getItemName(item)))
+				&& !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT
+						.equals(getItemName(item)))
 		{
-			if (!AGED_BRIE.equals(listItems.get(item).getName()))
+			if (listItems.get(item).getQuality() > 0)
 			{
-				if (!BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(item).getName()))
-				{
-					if (listItems.get(item).getQuality() > 0)
-					{
-						downQuality(item);
-					}
-				}
-				else
-				{
-					listItems.get(item).setQuality(listItems.get(item).getQuality() - listItems.get(item).getQuality());
-				}
+				downQuality(item);
 			}
-			else
+		} else
+		{
+			if (listItems.get(item).getQuality() < 50)
 			{
-				upQuality(item);
+				listItems.get(item).setQuality(
+						listItems.get(item).getQuality() + 1);
+
+				upQualityBackstage(item);
 			}
+		}
+	}
+
+	private static void updateSellin(int item)
+	{
+		if (!SULFURAS_HAND_OF_RAGNAROS.equals(getItemName(item)))
+		{
+			listItems.get(item).setSellIn(listItems.get(item).getSellIn() - 1);
+		}
+	}
+
+	private static void updateQualityForOutdatedItem(int item)
+	{
+
+		if (!AGED_BRIE.equals(getItemName(item)))
+		{
+			if (!BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(getItemName(item)))
+			{
+				if (listItems.get(item).getQuality() > 0)
+				{
+					downQuality(item);
+				}
+			} else
+			{
+				listItems.get(item).setQuality(listItems.get(item).getQuality() - listItems.get(item).getQuality());
+			}
+		} else
+		{
+			upQuality(item);
 		}
 	}
 
@@ -80,36 +103,20 @@ public class GildedRose
 
 	private static void downQuality(int item)
 	{
-		if (!SULFURAS_HAND_OF_RAGNAROS.equals(listItems.get(item).getName()))
+		if (!SULFURAS_HAND_OF_RAGNAROS.equals(getItemName(item)))
 		{
-			listItems.get(item).setQuality(listItems.get(item).getQuality() - 1);
+			listItems.get(item)	.setQuality(listItems.get(item).getQuality() - 1);
 		}
 	}
 
-	private static void qualitytest(int item)
+	private static String getItemName(int item)
 	{
-		if ((!AGED_BRIE.equals(listItems.get(item).getName()))
-				&& !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(item).getName()))
-		{
-			if (listItems.get(item).getQuality() > 0)
-			{
-				downQuality(item);
-			}
-		}
-		else
-		{
-			if (listItems.get(item).getQuality() < 50)
-			{
-				listItems.get(item).setQuality(listItems.get(item).getQuality() + 1);
-
-				upQualityBackstage(item);
-			}
-		}
+		return listItems.get(item).getName();
 	}
 
 	private static void upQualityBackstage(int item)
 	{
-		if (BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(listItems.get(item).getName()))
+		if (BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(getItemName(item)))
 		{
 			if (listItems.get(item).getSellIn() < 11)
 			{
