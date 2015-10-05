@@ -32,61 +32,63 @@ public class GildedRose
 	{
 		for (Item item : listItems)
 		{
-			if (!SULFURAS_HAND_OF_RAGNAROS.equals(item.getName()))
+			if (notSellInItem(item)) { continue;}
+			
+			updateQuality(item);
+			updateSellIn(item);
+			if (item.getSellIn() < 0)
 			{
-				updateQuality(item);
-				updateSellin(item);
-				if (item.getSellIn() < 0)
-				{
-					updateQualityForOutdatedItem(item);
-				}
+				updateQualityForOutDatedItem(item);
 			}
 		}
 	}
 
+	private static boolean notSellInItem(Item item)
+	{
+		return SULFURAS_HAND_OF_RAGNAROS.equals(item.getName());
+	}
+
 	private static void updateQuality(Item item)
 	{
-		if ((!AGED_BRIE.equals(item.getName()))
-				&& !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT
-						.equals(item.getName()))
+		if (notAgedAndBackstage(item))
 		{
-			if (item.getQuality() > 0)
-			{
 				downQuality(item);
-			}
-		} else
+		} 
+		else
 		{
 			if (item.getQuality() < 50)
 			{
-				item.setQuality(
-						item.getQuality() + 1);
+				item.setQuality(item.getQuality() + 1);
 
 				upQualityBackstage(item);
 			}
 		}
 	}
 
-	private static void updateSellin(Item item)
+	private static boolean notAgedAndBackstage(Item item)
+	{
+		return (!AGED_BRIE.equals(item.getName())) && !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(item.getName());
+	}
+
+	private static void updateSellIn(Item item)
 	{
 			item.setSellIn(item.getSellIn() - 1);
 	}
 
-	private static void updateQualityForOutdatedItem(Item item)
+	private static void updateQualityForOutDatedItem(Item item)
 	{
 
 		if (!AGED_BRIE.equals(item.getName()))
 		{
 			if (!BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(item.getName()))
 			{
-				if (item.getQuality() > 0)
-				{
 					downQuality(item);
-				}
 			} else
 			{
 				item.setQuality(item.getQuality() - item.getQuality());
 			}
-		} else
+		}
+		else
 		{
 			upQuality(item);
 		}
@@ -102,7 +104,10 @@ public class GildedRose
 
 	private static void downQuality(Item item)
 	{
+		if (item.getQuality() > 0)
+		{
 			item.setQuality(item.getQuality() - 1);
+		}
 	}
 
 	private static void upQualityBackstage(Item item)
