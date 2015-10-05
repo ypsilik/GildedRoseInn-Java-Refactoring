@@ -67,7 +67,7 @@ public class GildedRose
 
 	private static boolean notAgedAndBackstage(Item item)
 	{
-		return (!AGED_BRIE.equals(item.getName())) && !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(item.getName());
+		return notAgedName(item) && notBackstageName(item);
 	}
 
 	private static void updateSellIn(Item item)
@@ -78,20 +78,36 @@ public class GildedRose
 	private static void updateQualityForOutDatedItem(Item item)
 	{
 
-		if (!AGED_BRIE.equals(item.getName()))
+		if (notAgedName(item))
 		{
-			if (!BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(item.getName()))
+			if (notBackstageName(item))
 			{
 					downQuality(item);
-			} else
+			} 
+			else
 			{
-				item.setQuality(item.getQuality() - item.getQuality());
+				resetQualityItem(item);
 			}
 		}
 		else
 		{
 			upQuality(item);
 		}
+	}
+
+	private static void resetQualityItem(Item item)
+	{
+		item.setQuality(item.getQuality() - item.getQuality());
+	}
+
+	private static boolean notBackstageName(Item item)
+	{
+		return !BACKSTAGE_PASSES_TO_A_TAFKAL80ETC_CONCERT.equals(item.getName());
+	}
+
+	private static boolean notAgedName(Item item)
+	{
+		return !AGED_BRIE.equals(item.getName());
 	}
 
 	private static void upQuality(Item item)
